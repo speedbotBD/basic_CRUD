@@ -5,13 +5,13 @@ const app = express();
 const students = [];
 
 //Track ID
-let Identification = 0;
+let val = 0;
 
 //InBuild Middleware for Access Body
 app.use(express.json());
 
 //All Students
-app.get("/", (req, res) => {
+app.get("/student", (req, res) => {
     
     res.status(200).json({
         success: true,
@@ -22,8 +22,42 @@ app.get("/", (req, res) => {
 //Get single Student
 app.get("/student/:id", (req, res) => {
 
-    const id = req.params.Identification;
+    const id = Number(req.params.id); //req.params.id => String
     const student = students.find((s) => s.id === id);
+
+    res.status(200).json({
+        success: true,
+        student: student
+    });
+});
+
+//Delete student
+app.delete("/student/:id", (req, res) => {
+
+    const id = Number(req.params.id); //req.params.id => String
+    const index = students.findIndex((s) => s.id === id);
+    
+    students.splice(index, 1);
+
+    res.status(200).json({
+        success: true,
+        message: "Deleted Successfully"
+    });
+    
+});
+
+//Update Student
+app.put("/student/:id", (req, res) => {
+    
+    const id = Number(req.params.id); //req.params.id => String
+
+    const {name, age, dept} = req.body;
+
+    const student = students.find((s) => s.id === id);
+
+    student.name = name;
+    student.age = age;
+    student.dept = dept;
 
     res.status(200).json({
         success: true,
@@ -32,13 +66,14 @@ app.get("/student/:id", (req, res) => {
 })
 
 //Create Students
-app.post("/", (req, res) => {
+app.post("/student", (req, res) => {
     
-    Identification++;
+    val++;
+    const id = val;
 
     const {name, age, dept} = req.body;
     const student = {
-         Identification,
+         id,
          name,
          age,
          dept
