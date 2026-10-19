@@ -13,7 +13,6 @@ const { getStudentAll,
         updateStudent
       } = require("./controllers/student.controller");
 
-//const students = require("./data/students");
 
 //All Students
 app.get("/student", getStudentAll);
