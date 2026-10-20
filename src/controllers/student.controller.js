@@ -7,6 +7,9 @@ const { getAllStudentService,
       } = require("../services/student.service");
 
 
+//Import models
+const Student = require("../models/student");
+
 //Track ID
 let val = 0;
 
