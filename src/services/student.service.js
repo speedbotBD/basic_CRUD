@@ -45,7 +45,6 @@ module.exports = {
     getAllStudentService,
     getStudentService,
     postStudentService,
-    postStudentService,
     deleteStudentService,
     updateStudentService
-}
+}           

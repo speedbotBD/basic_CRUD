@@ -93,7 +93,7 @@ const updateStudent = (req, res) => {
     
     if(!student) {
         return res.status(404).json({
-            success: true,
+            success: false,
             message: "Student Not Found"
         });
     }
