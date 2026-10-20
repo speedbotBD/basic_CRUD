@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 
 const app = express();
@@ -29,6 +31,18 @@ app.put("/student/:id", updateStudent);
 //Create Students
 app.post("/student", postStudent);
 
-app.listen(5000, () => {
-    console.log("Server Run on PORT: 5000");
+//Error Middleware
+app.use((err, req, res, next) => {
+
+   res.status(500).json({
+    success: false,
+    message: "Internal Error"
+   });
+   
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is Running on PORT ${PORT}`);
 });
