@@ -1,4 +1,11 @@
 const students = require("../data/students");
+const { getAllStudentService,
+        getStudentService,
+        postStudentService,
+        deleteStudentService,
+        updateStudentService
+      } = require("../services/student.service");
+
 
 //Track ID
 let val = 0;
@@ -6,9 +13,11 @@ let val = 0;
 //Get All Student
 const getStudentAll =  (req, res) => {
     
+    const student = getAllStudentService();
+
     res.status(200).json({
         success: true,
-        student: students
+        student: student
     });
 }
 
@@ -16,7 +25,7 @@ const getStudentAll =  (req, res) => {
 const getStudent = (req, res) => {
 
     const id = Number(req.params.id); //req.params.id => String
-    const student = students.find((s) => s.id === id);
+    const student = getStudentService(id);
 
     if(!student) {
         return res.status(404).json({
@@ -38,18 +47,14 @@ const postStudent = (req, res) => {
     const id = val;
 
     const {name, age, dept} = req.body;
-    const student = {
-         id,
-         name,
-         age,
-         dept
-    }
+    
+    const student = postStudentService(id, name, age, dept);
 
     students.push(student);
 
     res.status(201).json({
         success: true,
-        student
+        student: student
     })
 }
 
@@ -58,7 +63,7 @@ const deleteStudent = (req, res) => {
     
 
     const id = Number(req.params.id); //req.params.id => String
-    const index = students.findIndex((s) => s.id === id);
+    const index = deleteStudentService(id);
     
     if(index === -1) {
         return res.status(404).json({
@@ -84,7 +89,14 @@ const updateStudent = (req, res) => {
 
     const {name, age, dept} = req.body;
 
-    const student = students.find((s) => s.id === id);
+    const student = updateStudentService(id);
+    
+    if(!student) {
+        return res.status(404).json({
+            success: true,
+            message: "Student Not Found"
+        });
+    }
 
     student.name = name;
     student.age = age;
