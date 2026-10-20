@@ -1,11 +1,15 @@
 require("dotenv").config();
 
 const express = require("express");
+const morgan = require("morgan");
 
 const app = express();
 
 //InBuild Middleware for Access Body
 app.use(express.json());
+
+//use morgan
+app.use(morgan("dev"));
 
 //Import Modules
 const { getStudentAll,

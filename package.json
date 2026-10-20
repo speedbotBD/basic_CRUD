@@ -20,6 +20,7 @@
   "homepage": "https://github.com/speedbotBD/basic_CRUD#readme",
   "dependencies": {
     "dotenv": "^18.0.8",
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "morgan": "^1.12.1"
   }
 }
