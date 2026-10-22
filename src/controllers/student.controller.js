@@ -1,4 +1,4 @@
-const students = require("../data/students");
+//const students = require("../data/students");
 const { getAllStudentService,
         getStudentService,
         postStudentService,
@@ -10,27 +10,30 @@ const { getAllStudentService,
 //Import models
 const Student = require("../models/student");
 
-//Track ID
-let val = 0;
-
 //Get All Student
-const getStudentAll =  async (req, res) => {
+const getStudentAll =  async (req, res, next) => {
     
-    const student = await getAllStudentService();
+    try {
+        const student = await getAllStudentService();
 
-    res.status(200).json({
+        res.status(200).json({
         success: true,
         student: student
     });
+    } catch (err) {
+        next(err)
+    }
+    
 }
 
 //Get Single Student
-const getStudent = async (req, res) => {
+const getStudent = async (req, res, next) => {
+    try {
+        const id = req.params.id; 
 
-    const id = Number(req.params.id); //req.params.id => String
-    const student = await getStudentService(id);
+        const student = await getStudentService(id);
 
-    if(!student) {
+        if(!student) {
         return res.status(404).json({
             success: false,
             message: "Student Not Found"
@@ -41,6 +44,10 @@ const getStudent = async (req, res) => {
         success: true,
         student: student
     });
+    }catch(err) {
+        next(err);
+    }
+    
 }
 
 //Create Student
@@ -70,13 +77,8 @@ const postStudent = async (req, res, next) => {
             message: "Invalid Dept"
         });
     }
-
-    val++;
-    const id = val;
-    
-    const student = await postStudentService(id, name, age, dept);
-
-    students.push(student);
+ 
+    const student = await postStudentService(name, age, dept);
 
     res.status(201).json({
         success: true,
@@ -90,37 +92,11 @@ const postStudent = async (req, res, next) => {
 }
 
 //Delete Student
-const deleteStudent = async (req, res) => {
+const deleteStudent = async (req, res, next) => {
     
-
-    const id = Number(req.params.id); //req.params.id => String
-    const index = await deleteStudentService(id);
-    
-    if(index === -1) {
-        return res.status(404).json({
-            success: false,
-            message: "Student Not Found"
-        });
-    }
-
-    students.splice(index, 1);
-
-    res.status(200).json({
-        success: true,
-        message: "Deleted Successfully"
-    });
-    
-}
-
-//Update Student
-const updateStudent = async (req, res) => {
-   
-    
-    const id = Number(req.params.id); //req.params.id => String
-
-    const {name, age, dept} = req.body;
-
-    const student = await updateStudentService(id);
+    try {
+    const id = req.params.id; //req.params.id => String
+    const student = await deleteStudentService(id);
     
     if(!student) {
         return res.status(404).json({
@@ -129,18 +105,45 @@ const updateStudent = async (req, res) => {
         });
     }
 
-    student.name = name;
-    student.age = age;
-    student.dept = dept;
+    res.status(200).json({
+        success: true,
+        message: "Deleted Successfully"
+    });
+    } catch(err) {
+        next(err);
+    }
+
+    
+    
+}
+
+//Update Student
+const updateStudent = async (req, res, next) => {
+   
+    try {
+        const id = req.params.id; 
+
+    const {name, age, dept} = req.body;
+
+    const student = await updateStudentService(id, name, age, dept);
+    
+    if(!student) {
+        return res.status(404).json({
+            success: false,
+            message: "Student Not Found"
+        });
+    }
 
     res.status(200).json({
         success: true,
-        student
+        student: student
     });
+    } catch(err) {
+        next(err);
+    }
+    
+    
 }
-
-
-
 
 
 module.exports = {

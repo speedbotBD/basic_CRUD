@@ -1,43 +1,47 @@
-const students = require("../data/students");
+//const students = require("../data/students");
+const Student = require("../models/student");
 
 //Get All Student
-const getAllStudentService = () => {
+const getAllStudentService = async () => {
      
-    return students;
+    return await Student.find();
 }
 
 //Get Single Student
-const getStudentService = (id) => {
+const getStudentService = async (id) => {
 
-    const student = students.find((s) => s.id === id);
-    return student;
+    return await Student.findById(id);
 }
 
 //Create Student
-const postStudentService = (id, name, age, dept) => {
+const postStudentService = async (name, age, dept) => {
 
-    const student = {
-        id,
-        name,
-        age,
-        dept
-
-    }
-
+    const student = await Student.create({name, age, dept});
     return student;
 }
 
 //Delete Student
-const deleteStudentService = (id) => {
+const deleteStudentService = async (id) => {
 
-    const index = students.findIndex((s) => s.id === id);
-    return index;
+    const student = await Student.findByIdAndDelete(id);
+    return student;
 }
 
 //Update Student
-const updateStudentService = (id) => {
+const updateStudentService = async (id, name, age, dept) => {
 
-    const student = students.find((s) => s.id === id);
+    const student = await Student.findByIdAndUpdate(
+        id,
+        {
+            name: name,
+            age: age,
+            dept: dept
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    )
     return student;
 }
 

@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const morgan = require("morgan");
+const connectDB = require("./config/db");
 
 const app = express();
 
@@ -18,6 +19,7 @@ const { getStudentAll,
         deleteStudent,
         updateStudent
       } = require("./controllers/student.controller");
+//const { connect } = require("mongoose");
 
 
 //All Students
@@ -37,7 +39,9 @@ app.post("/student", postStudent);
 
 //Error Middleware
 app.use((err, req, res, next) => {
-
+   
+    console.log(err.message);
+   
    res.status(500).json({
     success: false,
     message: "Internal Error"
@@ -45,8 +49,22 @@ app.use((err, req, res, next) => {
    
 });
 
+//Server PORT
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`Server is Running on PORT ${PORT}`);
-});
+const startServer = async () => {
+    try {
+
+        await connectDB();
+        
+        app.listen(PORT, () => {
+            console.log(`Server is Running On PORT: ${PORT}`);
+        })
+    } catch(err) {
+
+        console.log(`Faild to Start Server`, err.message);
+        process.exit(1);
+    }
+}
+
+startServer();
